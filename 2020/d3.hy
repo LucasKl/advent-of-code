@@ -1,7 +1,6 @@
 (setv geo (with [o (open "res/d3")] (.readlines o)))
 (setv geo-len  31)
 
-
 (defn get-loc [x y]
     (nth (nth geo y) (% x geo-len)))
 

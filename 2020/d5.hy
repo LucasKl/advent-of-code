@@ -1,24 +1,13 @@
-(defn decode [ticket code ids]
-  (defmacro nids [ids] '(int (/ (len ids) 2)))
-  (setv next-ids
-    (cond 
-      [(= (first ticket) (first code)) (list (drop-last (nids ids) ids))]
-      [(= (first ticket) (second code)) (list (drop (nids ids) ids))]))
-    (if 
-      (> (len next-ids) 1) (decode (list (drop 1 ticket)) code next-ids)
-      (first next-ids)))
-
 (defn seat-id [data] (+ (* (first data) 8) (second data)))
 
 (defn get-seat [ticket] 
-  (setv row-ticket (list (drop-last 3 ticket)))
-  (setv column-ticket (list (drop 7 ticket)))
-  [(decode row-ticket "FB" (list (range 128)))
-  (decode column-ticket "LR" (list (range 8)))] )
+  (setv row-ticket (.join "" (list (drop-last 4 ticket))))
+  (setv column-ticket (.join "" (list (drop 7 ticket))))
+  (defn decode [ticket code]
+    (int (.replace (.replace ticket (first code) "1") (second code) "0") 2))
+  [(decode row-ticket "BF") (decode column-ticket "RL")])
 
 (setv data (with [o (open "res/d5")] (.readlines o)))
-
-
 (setv ids (list (map seat-id (map get-seat data))))
 
 (defn test-id [id]
