@@ -13,5 +13,5 @@
 (setv parsed-groups (.parse groups data))
 
 ;(print (first parsed-groups))
-(print (count-answers (first parsed-groups)))
-(print (sum (list (map count-answers parsed-groups))))
+(print "D6-1: " (count-answers (first parsed-groups)))
+(print "D7-1: " (sum (list (map count-answers parsed-groups))))

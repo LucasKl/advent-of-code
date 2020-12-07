@@ -33,15 +33,15 @@
   (setv key (first field))
   (setv value (last field))
   (defn to-int [v] (int (.join "" (drop-last 2 v))))
-  (defmacro in-range [value low high] (and (>= (int value) low) (<= (int value) high)))
+  (defmacro in-range [value low high] `(and (>= (int ~value) ~low) (<= (int ~value) ~high)))
   (cond 
     [(= key "byr") (and (match "^\d{4}$" value) (in-range value 1920 2002))]
-    [(= key "iyr") (and (match "^\d{4}$" value) (in-range value 2019 2020))]
+    [(= key "iyr") (and (match "^\d{4}$" value) (in-range value 2010 2020))]
     [(= key "eyr") (and (match "^\d{4}$" value) (in-range value 2020 2030))]
     [(= key "hgt") (and (match "^(\d{3}|\d{2})(cm|in)$" value) 
                      (if 
-                       (in "cm" value) (and (>= (to-int value) 150) (<= (to-int value) 193))
-                       (and (>= (to-int value) 59) (<= (to-int value) 76))))]
+                       (in "cm" value) (in-range (to-int value) 150 193)
+                       (in-range (to-int value) 59 76)))]
     [(= key "hcl") (bool (match "^#[0-9a-f]{6}$" value))]
     [(= key "ecl") (in value ["amb" "blu" "brn" "gry" "grn" "hzl" "oth"])]
     [(= key "pid") (bool (match "^\d{9}$" value))]
@@ -50,4 +50,4 @@
 
 (setv passports (.parse data-parser data))
 
-(print "D4-1: " (len (list (filter identity (list (map passport-valid? passports))))))
+(print "D4-2: " (len (list (filter identity (list (map passport-valid? passports))))))

@@ -14,4 +14,4 @@
     trees)
 
 (setv slopes [[1 1] [3 1] [5 1] [7 1] [1 2]])
-(print (reduce * (list (map count-trees slopes))))
+(print "D3-2: " (reduce * (list (map count-trees slopes))))
