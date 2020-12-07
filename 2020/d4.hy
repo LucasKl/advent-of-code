@@ -33,10 +33,11 @@
   (setv key (first field))
   (setv value (last field))
   (defn to-int [v] (int (.join "" (drop-last 2 v))))
+  (defmacro in-range [value low high] (and (>= (int value) low) (<= (int value) high)))
   (cond 
-    [(= key "byr") (and (match "^\d{4}$" value) (and (>= (int value) 1920) (<= (int value) 2002)))]
-    [(= key "iyr") (and (match "^\d{4}$" value) (and (>= (int value) 2010) (<= (int value) 2020)))]
-    [(= key "eyr") (and (match "^\d{4}$" value) (and (>= (int value) 2020) (<= (int value) 2030)))]
+    [(= key "byr") (and (match "^\d{4}$" value) (in-range value 1920 2002))]
+    [(= key "iyr") (and (match "^\d{4}$" value) (in-range value 2019 2020))]
+    [(= key "eyr") (and (match "^\d{4}$" value) (in-range value 2020 2030))]
     [(= key "hgt") (and (match "^(\d{3}|\d{2})(cm|in)$" value) 
                      (if 
                        (in "cm" value) (and (>= (to-int value) 150) (<= (to-int value) 193))
