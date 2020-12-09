@@ -9,9 +9,13 @@
       (product preamble preamble)))))
 
 (defn validate [data]
-  (setv keys (build-keys (list (take 25 data))))
+  (setv keys (list (take 25 data)))
   (setv numbers (list (drop 25 data)))
-  (if (in (first numbers) keys)
+  (defn valid? [x]
+    (for [key keys]
+      (if (in (- x key) keys) (return True))))
+  
+  (if (valid? (first numbers))
       (validate (list (drop 1 data)))
       (first numbers)))
 
