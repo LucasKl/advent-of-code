@@ -16,7 +16,7 @@
       (setv op (first (second instrt)))
       (setv rs (second (second instrt)))
       (if (in pc visited)
-        (, acc False)
+        (, acc False visited)
         (do
           (.append visited pc)
           (cond
@@ -24,11 +24,13 @@
             [(= op "jmp") (eval (+ pc rs) acc prog visited)]
             [True (eval (+ pc 1) acc prog visited)]))))))
 
-(print "D8-1: " (first (eval 0 0 instructions [])))
+(setv solution1 (eval 0 0 instructions []))
+(print "D8-1: " (first solution1))
 
                                 ; Second puzzle
 (setv progs [(, 0 instructions)])
-(for [instr instructions]
+(for [i (nth solution1 2)]
+  (setv instr (nth instructions i))
   (setv pc (first instr))
   (setv op (first (second instr)))
   (setv rs (second (second instr)))
