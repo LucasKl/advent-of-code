@@ -18,8 +18,11 @@
 
 (setv buses (list (.split (second data) ",")))
 (setv model (LpProblem :sense LpMinimize))
-(setv t (LpVariable "t" 100000000000000)) ; :cat "Integer"))
+(setv t (LpVariable "t" 100000000000000 :cat "Integer"))
+;;(setv t (LpVariable "t" 0 :cat "Integer"))
 
+(+= model t)
+(+= model (<= t 450000000000000))
 
 (for [i (range (len buses))]
   (setv schedule (nth buses i))
@@ -27,9 +30,7 @@
   (if (.isnumeric schedule)
       (do
         (setv x (LpVariable (+ "x" (str i)) 0 :cat "Integer"))
-        (+= model (= (* (int schedule) x) (+ t i)))
-        ;(+= model (<= (* (int schedule) x) (+ t i)))
-        )))
+        (+= model (= (* (int schedule) x) (+ t i))) )))
 
 ;(+= model (>= t 1202161486))
 ;(+= model (>= t 10000))
