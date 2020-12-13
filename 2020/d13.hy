@@ -34,8 +34,8 @@
 ;(+= model (>= t 1202161486))
 ;(+= model (>= t 10000))
 
-(.solve model)
 (print model)
+(.solve model)
 (print (.variables model))
 (setv val-t (second (.variables model)))
 (for [var (.variables model)]
