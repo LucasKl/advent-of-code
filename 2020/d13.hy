@@ -11,33 +11,23 @@
 
 (setv earliest-bus (min (list (map (fn [bus] (solve earliest bus)) buses))))
 
-;;(print "D13-1:" (* (- (first earliest-bus) earliest) (second earliest-bus)))
+(print "D13-1:" (* (- (first earliest-bus) earliest) (second earliest-bus)))
 
 ;; puzzle 2
-(import [pulp [LpMinimize LpProblem LpVariable]])
-
 (setv buses (list (.split (second data) ",")))
-(setv model (LpProblem :sense LpMinimize))
-(setv t (LpVariable "t" 100000000000000 :cat "Integer"))
-;;(setv t (LpVariable "t" 0 :cat "Integer"))
-
-(+= model t)
-(+= model (<= t 450000000000000))
-
-(for [i (range (len buses))]
-  (setv schedule (nth buses i))
-  (print schedule)
-  (if (.isnumeric schedule)
+(setv l (reduce * (map int (filter (fn [x] (x.isnumeric)) buses))))
+(setv b-prev (int (first buses)))
+(setv step b-prev)
+(setv offset 1)
+(for [b (drop 1 buses)]
+  (if (.isnumeric b)
       (do
-        (setv x (LpVariable (+ "x" (str i)) 0 :cat "Integer"))
-        (+= model (= (* (int schedule) x) (+ t i))) )))
+        (while (!= (% (+ l offset) (int b)) 0)
+          (setv l (- l step)))
+        (setv step (* step (int b)))
+        (setv b-prev (int b))
+        (setv l (+ offset l))
+        (setv offset 1))
+      True (setv offset (+ 1 offset))))
 
-;(+= model (>= t 1202161486))
-;(+= model (>= t 10000))
-
-(print model)
-(.solve model)
-(print (.variables model))
-(setv val-t (second (.variables model)))
-(for [var (.variables model)]
-  (print var (.value var)))
+(print "D13-2:" (- l (len buses) -1))
