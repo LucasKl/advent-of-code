@@ -36,10 +36,9 @@
         (setv addresses (flatten (unfloat "" (apply-mask (int index) state.mask))))
         ;(print (list (chain.from_iterable addresses)))
         (for [address addresses]
-          (print (int (.join "" address) 2))
           (assoc state.mem (int (.join "" address) 2) (int value)))
         (State state.mem state.mask))))
 
 (setv program (with [o (open "res/d14")] (.splitlines (.read o))))
 (setv res (reduce execute program (State {} "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")))
-(print (sum (.values res.mem)))
+(print "D14-2:" (sum (.values res.mem)))
