@@ -1,0 +1,25 @@
+(load "res/d2.vcd" t)
+
+(defun day2-1 []
+  (set [x 0] [y 0])
+  (whenever #t
+    (case command
+          [0 (set (y (- y arg)))]
+	  [1 (set (y (+ y arg)))]
+	  [2 (set (x (+ x arg)))]))
+  (print "D2-1: " (* x y)))
+
+(defun day2-2 []
+  (set [x 0] [y 0] [aim 0])
+  (whenever #t
+    (case command
+          [0 (set [aim (- aim arg)])]
+	  [1 (set [aim (+ aim arg)])]
+	  [2 (set [x (+ x arg)]
+	     	  [y (+ y (* aim arg))])]))
+  (print "D2-2: " (* x y)))
+
+
+(day2-1)
+(day2-2)
+
