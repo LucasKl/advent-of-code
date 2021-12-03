@@ -1,0 +1,34 @@
+(import d3)
+
+(load "res/d3.vcd" t)
+
+(set [ALL-INDEXES (find/g #t)])
+
+(defun gamma [bit indices]
+  (set [high (length (find/g (&& (in INDEX indices) data[bit])))]
+       [low  (length (find/g (&& (in INDEX indices) (! data[bit]))))])
+  (>= high low))
+
+(defun epsilon [bit indices]
+  (set [high (length (find/g (&& (in INDEX indices) data[bit])))]
+       [low  (length (find/g (&& (in INDEX indices) (! data[bit]))))])
+  (< high low))
+
+(print "D3-1: " (* (call d3.toInt (map (fn [bit] (gamma bit ALL-INDEXES)) '(11 10 9 8 7 6 5 4 3 2 1 0)))
+       	           (call d3.toInt (map (fn [bit] (epsilon bit ALL-INDEXES)) '(11 10 9 8 7 6 5 4 3 2 1 0)))))
+
+(defun oxygen [bit candidates]
+  (set [g (gamma bit candidates)])
+  (set [a (find/g (&& (in INDEX candidates) (= data[bit] g)))])
+  (if (= 1 (length a))
+    (reval data a[0])
+    (oxygen (- bit 1) a)))
+
+(defun co2 [bit candidates]
+  (set [g (epsilon bit candidates)])
+  (set [a (find/g (&& (in INDEX candidates) (= data[bit] g)))])
+  (if (= 1 (length a))
+    (reval data a[0])
+    (co2 (- bit 1) a)))
+
+(print "D3-2: " (* (oxygen 11 ALL-INDEXES) (co2 11 ALL-INDEXES)))
