@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 keys = {'up': 0,
         'down': 1,
         'forward': 2}

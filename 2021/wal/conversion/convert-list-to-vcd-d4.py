@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 with open('../res/d4', 'r') as puzzle_file:
     puzzle = list(map(lambda line: line.split(), puzzle_file.readlines()))
     numbers = puzzle[0][0]

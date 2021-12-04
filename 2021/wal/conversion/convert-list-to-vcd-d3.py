@@ -2,7 +2,7 @@
 
 import sys
 
-with open('../res/d3t', 'r') as puzzle_file:
+with open('../res/d3', 'r') as puzzle_file:
     puzzle = puzzle_file.read().splitlines()
 
     with open(f'../res/d3.vcd', 'w') as f:

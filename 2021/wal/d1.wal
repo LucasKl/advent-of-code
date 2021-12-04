@@ -1,5 +1,5 @@
 (load "res/d1.vcd" t)
 
-(print "D1-1: " (length (find (< d1.data d1.data@1))))
+(print "D1-1: " (length (find (< data data@1))))
 
-(print "D1-2: " (length (find (< (+ d1.data@(0 1 2)) (+ d1.data@(1 2 3))))))
+(print "D1-2: " (length (find (< (+ data@<0 1 2>) (+ data@<1 2 3>)))))
