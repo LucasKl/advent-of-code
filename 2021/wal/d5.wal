@@ -1,29 +1,24 @@
 (load "res/d5.vcd" t)
 
-(defun add-point [sx sy tx ty marked]
-  (set [dx (cond [(> tx sx) 1]
-		 [(= tx sx) 0]
-		 [(< tx sx) -1])]
-       [dy (cond [(> ty sy) 1]
-		 [(= ty sy) 0]
-		 [(< ty sy) -1])])
-  (seta marked sx sy (+ (geta marked sx sy) 1))
-  (if (&& (= sx tx) (= sy ty))
-      marked
-      (add-point (+ sx dx) (+ sy dy) tx ty marked)))
+(set [marked (array)])
 
-(defun solve [condition]
-  (set [m (array)])
-  (whenever (eval condition) (add-point x1 y1 x2 y2 m))
-  (set [i 0])
-  (mapa (fn [_ seen [i i]] (when (> seen 1) (set [i (+ i 1)]))) m)
-  i)
+(defun get-dir [s t]
+  (cond [(> t s) 1]
+    	[(= t s) 0]
+	[(< t s) -1]))
 
-(print "D5-1: " (solve '(|| (= x1 x2) (= y1 y2))))
-(print "D5-2: " (solve '#t))
+(defun add-point [sx sy tx ty]
+  (set [dx (get-dir sx tx)]
+       [dy (get-dir sy ty)])
+  (when (= (geta marked sx sy) 1) (inc seen))	 
+  (seta marked sx sy (+ (geta marked sx sy) 1))		 
+  (unless (&& (= sx tx) (= sy ty))
+      (add-point (+ sx dx) (+ sy dy) tx ty)))
 
-; (set [m (array)])
-; (whenever #t (add-point x1 y1 x2 y2 m))
-; (set [i 0])
-; (mapa (lambda [_ seen] (when (> seen 1) (inc i))) m)
-; (print "D5-2: " i)
+(defun mark [condition]
+  (whenever (eval condition) (add-point x1 y1 x2 y2)))
+
+(mark '(|| (= x1 x2) (= y1 y2)))
+(print "D5-1: " seen)
+(mark '(! (|| (= x1 x2) (= y1 y2))))
+(print "D5-2: " seen)
