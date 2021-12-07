@@ -1,0 +1,19 @@
+(require res/d7)
+;(set [data '(16 1 2 0 4 2 7 1 2 14)])
+
+(defun cost/const [x y]
+  (if (> x y) (- x y) (- y x)))
+
+(defun cost/grow [x y]
+  (set [n (cost/const x y)])
+  (/ (* n (+ n 1)) 2))
+
+(defun proc [best x f]
+  (let [cost (sum (map (fn [y (x x) (f f)] (f x y)) data))]
+    (cond [(= best -1) cost]
+    	  [(< cost best) cost]
+	  [#t best])))
+
+(set [positions (range (min data) (+ (max data) 1))])
+(print "D7-1: " (fold (fn [best x] (proc best x cost/const)) -1 positions))
+(print "D7-2: " (fold (fn [best x] (proc best x cost/grow)) -1 positions))
