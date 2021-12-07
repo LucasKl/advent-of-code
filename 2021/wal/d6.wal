@@ -14,7 +14,7 @@
   (fold (fn [acc n (xs data)] (+ acc (count n xs))) '() '(0 1 2 3 4 5 6 7 8)))
 
 (print "D6-1: " (sum (run (parse fish) 80)))
-(print "F6-2: " (sum (run (parse fish) 256)))
+(print "D6-2: " (sum (run (parse fish) 256)))
 
 
 
