@@ -1,0 +1,23 @@
+(require res/d6)
+
+(defun run [xs i]
+  (defun simulate [xs]
+    (+ xs[1:7] (+ xs[7] xs[0]) xs[8:9] xs[0]))
+  (cond
+    [(= i 0) xs]
+    [#t (run (simulate xs) (- i 1))]))
+
+(defun parse [data]
+  (defun count [n xs]
+    (fold (fn [acc x (n n)] (if (= x n) (+ acc 1) acc)) 0 xs))
+
+  (fold (fn [acc n (xs data)] (+ acc (count n xs))) '() '(0 1 2 3 4 5 6 7 8)))
+
+(print "D6-1: " (sum (run (parse fish) 80)))
+(print "F6-2: " (sum (run (parse fish) 256)))
+
+
+
+
+	    
+	  
