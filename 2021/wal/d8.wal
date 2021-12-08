@@ -1,0 +1,44 @@
+(load "res/d8.vcd" t)
+
+(defun count [] (fold (fn [acc s] (+ acc (get s))) 0 '(a b c d e f g)))
+
+(defun decode [lookup]
+  (case (count)
+    [2 1]
+    [3 7]
+    [4 4]
+    [5 (cond
+         [(= (shared (geta lookup 3)) 3) 3]
+         [(= (shared (geta lookup 4)) 3) 5]
+         [(= (shared (geta lookup 4)) 2) 2])]
+    [6 (cond
+         [(= (shared (geta lookup 2)) 1) 6]
+         [(= (shared (geta lookup 4)) 4) 9]
+         [#t 0])]  
+    [7 8]))
+
+(print "D8-1: " (length (find (&& output (in (count) '(2 3 4 7))))))
+
+(defun shared [other]
+  (defun count/one [acc x]
+    (if (= x 2) (+ acc 1) acc))
+  (set [pairs (zip (list a b c d e f g) other)])
+  (fold count/one 0 (map sum pairs)))
+
+(defun search [n s]
+  (cond
+    [(&& output (! output@1)) (step (- s 1)) (+ INDEX s)]
+    [(= (count) n) (step (- s)) (+ INDEX s)]
+    [#t (step)
+        (search n (+ s 1))]))
+
+(defun simple []
+  (fold (fn [acc t] (if (in (count)@t '(2 3 4 7)) (seta acc (count) (list a b c d e f g))@t acc)) (array) (range 14)))
+
+(defun decode-all []
+  (set [lookup (simple)]
+       [res (map (fn [x (lookup lookup)] (decode lookup)@x) '(10 11 12 13))])
+  (sum (map (fn [p] (* p[0] (** 10 p[1]))) (zip res (range 3 -1 -1)))))
+
+
+(print "D8-2: " (sum (map (fn [t] (decode-all)@t) (range 0 (whenever #t INDEX) 14))))
