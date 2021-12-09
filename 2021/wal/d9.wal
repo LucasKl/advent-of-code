@@ -1,0 +1,50 @@
+(require util)
+
+(load "res/d9.vcd" t)
+
+(set [lmax 99])
+(set [tmax (whenever #t INDEX)])
+
+(defun xmin [l]
+  (set [l (+ "l" l)])
+  (find (&&  (< (get l) (if (= INDEX 0) 10 (get l)@-1)) (< (get l) (if (< INDEX tmax) (get l)@1 10)))))
+
+(defun is-real-min [l t]
+  (cond [(= l 0) (< l0@t l1@t)]
+        [(= l lmax) (< (get (+ "l" l)) (get (+ "l" (- l 1))))@t]
+        [#t (&& (< (get (+ "l" l)) (get (+ "l" (- l 1))))
+                (< (get (+ "l" l)) (get (+ "l" (+ l 1)))))@t]))
+
+(defun find-risk [l]
+  (map (fn [t (l l)] (if (is-real-min l t) (+ 1 (get (+ "l" l))@t) 0)) (xmin l)))
+
+(print "D9-1: " (sum (map sum (map find-risk (range (+ lmax 1))))))
+
+(set [mark (array)])
+(defun fill [l t]
+  (if (&& (! (geta mark l t)) (!= (get (+ "l" l))@t 9))
+    (do (seta mark l t #t)
+        (set [top (if (> l 0) (fill (- l 1) t) 0)]
+             [bottom (if (< l lmax) (fill (+ l 1) t) 0)]
+             [left (if (> t 0) (fill l (- t 1)) 0)]
+             [right (if (< t tmax) (fill l (+ t 1)) 0)])
+        (+ 1 top bottom left right))
+     0))
+
+(defun find-basins [l]
+  (map (fn [t (l l)] (if (is-real-min l t) (fill l t) 0)) (xmin l)))
+
+(let [basins (fold (fn [acc x] (+ acc x)) '() (map find-basins (range (+ lmax 1))))]
+     [real-basins (quicksort (filter '(fn [x] (> x 0)) basins))]
+     [best-basins real-basins[(- (length real-basins) 3):(length real-basins)]]
+     (print "D9-2: " (fold * 1 best-basins)))
+
+;(set [basins (quicksort (fold (fn [acc x] (+ acc x)) '() (map find-basins (range (+ lmax 1)))))])
+;(print "D9-2: " (fold * 1 basins[(- (length basins) 3):(length basins)]))
+  
+
+
+
+
+
+
