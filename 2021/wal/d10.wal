@@ -1,0 +1,45 @@
+(require util)
+
+(load "res/d10.vcd" t)
+
+(defun check-valid [acc x]
+  (if (list? acc)
+      (cond
+       [(< x 9) (+ acc x)]
+       [(&& acc (= x (+ acc[-1] 10)))
+	acc[0:-1]]
+       [#t (case x
+	     [11 3]
+	     [12 57]
+	     [13 1197]
+	     [14 25137]
+	     )])
+      acc))
+
+(defun check-line []
+  (let [start-index INDEX]
+       [res (fold/signal check-valid '() (&& (!= INDEX start-index) (! start@-1) start) data)]
+       res))
+
+(defun get-errors [acc x]
+  (cond
+   [x (set [res (check-line)])
+      (if (! (list? res)) (+ acc res) acc)]
+   [(! x) acc]))
+
+(print "D10-1: " (sum (fold/signal get-errors '() #f start)))
+
+(defun get-incomplete [acc x]
+  (cond
+   [x (set [res (check-line)])
+      (if (&& (list? res) (> (length res) 0)) (+ acc (list (reverse res))) acc)]
+   [(! x) acc]))
+
+(defun complete [xs]
+  (defun complete-part [acc x]
+    (+ (* 5 acc) x))
+  (fold complete-part 0 xs))
+
+(let [incomplete (fold/signal get-incomplete '() #f start)]
+     [completed (quicksort (map complete incomplete))]
+     (print "D10-2: " (slice completed (/ (length completed) 2))))

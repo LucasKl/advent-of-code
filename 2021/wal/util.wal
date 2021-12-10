@@ -14,3 +14,6 @@
 ;------------------------------------------------------------------------------------------
 (defun filter [f xs]
   (fold (fn [acc x (f f)] (if (f x) (+ acc x) acc)) '() xs))
+
+(defun reverse [xs]
+  (fold (fn [acc x] (+ x acc)) '() xs))
