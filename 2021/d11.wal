@@ -1,0 +1,33 @@
+(require res/d11)
+
+(set [flashed 0])
+
+(defun flash [world x y]
+  (when (&& (>= x 0) (< x mx) (>= y 0) (< y my))
+    (seta world x y (+ (geta world x y) 1))
+    (when (= (geta world x y) 10)
+      (inc flashed)
+      (flash world (- x 1) y)
+      (flash world (+ x 1) y)
+      (flash world x (- y 1))
+      (flash world x (+ y 1))
+      (flash world (- x 1) (- y 1))
+      (flash world (- x 1) (+ y 1))
+      (flash world (+ x 1) (- y 1))
+      (flash world (+ x 1) (+ y 1)))))
+    
+
+(defun simulate [world i]
+  (for [y (range my)]
+       (for [x (range mx)]
+	    (flash world x y)))
+  
+  (mapa (fn [k v (world world)] (if (>= v 10) (seta world k 0) v)) world)
+  
+  (when (= i 100) (print "D11-1: " flashed))
+
+  (if (= (sum (mapa (fn [k v] v) world)) 0)
+      (print "D11-2: " i)
+      (simulate world (+ i 1))))
+
+(simulate (init) 1)
