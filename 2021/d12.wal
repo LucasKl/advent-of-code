@@ -8,14 +8,17 @@
   (set [b-list (if (in b g) (geta g b) '())])
   (seta graph b (+ b-list a)))
 
-(defun search [g pos path twice]
+(defun tostring [xs]
+  (fold (fn [str x] (+ str x)) "" xs))
+
+(defun search [g pos path small twice]
   (cond
-   [(= pos "end") (+ path "end")]
+   [(= pos "end") (tostring path)] ;(+ path "end")
    [#t
     (set [res '()])
     (for [c (geta g pos)]
-	 (unless (&& (call d12.is_small c) (> (count c path) (if (= c twice) 1 0)))
-	   (set [found-path (search g c (+ path pos) twice)])
+	 (unless (&& (call d12.is_small c) (> (list-count c small) (if (= c twice) 1 0)))
+	   (set [found-path (search g c (+ path pos) (if (call d12.is_small pos) (+ small pos) small) twice)])
 	   (when found-path
 	     (set [res (+ res found-path)]))))
     res]))
@@ -29,12 +32,13 @@
 
 ;------------------------------------------------------------------------------------------
 
+
 (set [graph (array)])
 (for [connection (call d12.puzzle)]
      (link graph (first connection) (second connection)))
-
-(set [paths (search graph "start" '() "0")])
-(set [paths (first (fold split '(() ()) paths))])
+	  
+(set [paths (search graph "start" '() '() "0")])
+;(set [paths (first (fold split '(() ()) paths))])
 
 (print "D12-1: " (length paths))
 
@@ -42,18 +46,27 @@
 
 (set [small-caves '()])
 
+(defun unique [xs]
+  (set [tmp (array)]
+       [counter 0])
+  (for [x xs]
+       (seta tmp x #t))
+  (mapa (fn [k v (counter counter)] (set [counter (+ counter 1)])) tmp)
+  counter)
+
 (set [caves (filter-duplicates (fold (fn [acc x] (+ acc x[0] x[1])) '() (call d12.puzzle)))]
      [small-caves (filter (fn [x] (&& (call d12.is_small x) (!= x "start") (!= x "end"))) caves)])
 
 (set [paths '()])
 (for [twice small-caves]
-     (set [paths (+ paths (search graph "start" '() twice))]))
+     (set [paths (+ paths (search graph "start" '() '() twice))]))
 
 (defun filter-list-duplicates [xs]
   (fold (fn [acc x] (if (in x acc) acc (+ acc (list x)))) '() xs))
 
-(set [paths (first (fold split '(() ()) paths))]) 
-(print "D12-2: " (length (filter-list-duplicates paths)))
+(print "D12-2: " (unique paths))
+;(set [paths (first (fold split '(() ()) paths))])
+;(print "D12-2: " (length (filter-list-duplicates paths)))
 
 ;(set [paths  (first (fold split '(() ()) (search graph "start" '() 0)))])
 

@@ -1,0 +1,10 @@
+(load "res/d1.vcd" t)
+
+(require util)
+
+(let ([elves (all-scopes
+     	     (sum (map get SIGNALS)))])
+     (print "D1-1: " (max elves))
+     (print "D1-2: " (sum (reverse (quicksort elves))[0:3])))
+
+  

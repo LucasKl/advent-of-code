@@ -18,7 +18,7 @@
 (defun reverse [xs]
   (fold (fn [acc x] (+ x acc)) '() xs))
 
-(defun count [n xs]
+(defun list-count [n xs]
   (fold (fn [occurences x (n n)] (if (= x n) (+ occurences 1) occurences)) 0 xs))
 
 (defun filter-duplicates [xs]
