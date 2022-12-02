@@ -1,0 +1,25 @@
+(load "res/d2.vcd" t)
+
+(defun play-round [you other]
+    (cond [(&& (= you 1) (= other 3)) (+ 6 you)]
+          [(= you (+ other 1)) (+ 6 you)]
+	  [(= you other) (+ other 3)]
+	  [#t you]))
+
+(defun end->shape []
+    (case end
+     	  [1 (if (= opponent 1) 3 (- opponent 1))]
+	  [2 opponent]
+	  [3 (if (= opponent 3) 1 (+ opponent 1))]))
+
+(defun play [f]
+  (set [rounds '()])
+  (whenever #t
+    (set [rounds (+ rounds (play-round (f) opponent))]))
+  (sum rounds))
+
+(print "D1-1: " (play (fn [] end)))
+(print "D2-2: " (play end->shape))
+
+
+
